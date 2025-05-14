@@ -7,10 +7,10 @@ RUN yarn global add http-server
 WORKDIR /app
 
 # copy both 'package.json' and 'package-lock.json' (if available)
-COPY package*.json ./
+COPY package.json yarn.lock ./
 
 # install project dependencies
-RUN yarn install
+RUN yarn install --frozen-lockfile
 
 # copy project files and folders to the current working directory (i.e. 'app' folder)
 COPY . .
