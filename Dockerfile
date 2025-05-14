@@ -1,8 +1,5 @@
 FROM node:lts-alpine
 
-# install simple http server for serving static content
-RUN yarn global add http-server
-
 # make the 'app' folder the current working directory
 WORKDIR /app
 
@@ -23,4 +20,4 @@ ARG VITE_SOCKET_API
 RUN yarn build
 
 EXPOSE 8080
-CMD [ "http-server", "dist" ]
+CMD [ "yarn", "preview" ]
