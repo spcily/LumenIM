@@ -18,18 +18,13 @@ ARG VITE_BASE
 ARG VITE_ROUTER_MODE 
 ARG VITE_BASE_API 
 ARG VITE_SOCKET_API
+ARG VITE_RSA_PUBLIC_KEY
 
 # build app for production with minification
 RUN yarn build
 
 # Production stage
 FROM nginx:alpine
-
-# Build arguments for environment variables
-ARG VITE_BASE 
-ARG VITE_ROUTER_MODE 
-ARG VITE_BASE_API 
-ARG VITE_SOCKET_API
 
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
