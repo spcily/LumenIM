@@ -23,18 +23,7 @@ ARG VITE_SOCKET_API
 RUN yarn build
 
 # Production stage
-FROM node:lts-alpine
-
-WORKDIR /app
-
-
-# Copy only the built app from the build stage
-COPY --from=build /app/dist /app/dist
-COPY --from=build /app/package.json /app/yarn.lock ./
-
-# Install dependencies including Vite which is needed for the preview command
-# We need to install ALL dependencies since vite is used by the preview command
-RUN yarn install --frozen-lockfile
+FROM nginx:alpine
 
 # Build arguments for environment variables
 ARG VITE_BASE 
@@ -42,8 +31,14 @@ ARG VITE_ROUTER_MODE
 ARG VITE_BASE_API 
 ARG VITE_SOCKET_API
 
-# Expose the correct port
-EXPOSE 8080
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Start the app with specific host to make it accessible
-CMD [ "yarn", "preview", "--host", "0.0.0.0", "--port", "8080" ]
+# Copy the built files from the build stage to nginx's serve directory
+COPY --from=build /app/dist /usr/share/nginx/html
+
+# Expose port 80
+EXPOSE 80
+
+# Nginx starts automatically
+CMD ["nginx", "-g", "daemon off;"]
